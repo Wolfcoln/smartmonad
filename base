@@ -1,0 +1,29 @@
+const { ethers } = require("ethers");
+
+// Подключение к сети Base
+const provider = new ethers.providers.JsonRpcProvider('https://mainnet.base.org');
+const signer = provider.getSigner();
+
+// Адрес контракта и ABI
+const contractAddress = '0x5D9e8E37A96DD9Ed1e03D1c53C033EFc3ebEfdA8'; // Адрес контракта
+const abi = [
+  // ABI контракта
+  "function setNumber(uint256 _number) public",
+  "function getNumber() public view returns (uint256)"
+];
+
+// Создание экземпляра контракта
+const contract = new ethers.Contract(contractAddress, abi, signer);
+
+// Функция для установки числа
+async function setNumber(num) {
+  const tx = await contract.setNumber(num);
+  await tx.wait();
+  console.log(`Number set to: ${num}`);
+}
+
+// Функция для получения числа
+async function getNumber() {
+  const number = await contract.getNumber();
+  console.log(`Current number: ${number.toString()}`);
+}
